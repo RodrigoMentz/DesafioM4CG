@@ -75,7 +75,7 @@ uniform sampler2D texBuff;
 uniform vec3 lightPos;
 uniform vec3 camPos;
 uniform float ka;
-uniform float kd;
+uniform float ke;
 uniform float ks;
 uniform float q;
 out vec4 color;
@@ -96,7 +96,7 @@ void main()
 	vec3 N = normalize(vNormal);
 	vec3 L = normalize(lightPos - vec3(fragPos));
 	float diff = max(dot(N, L),0.0);
-	vec3 diffuse = kd * diff * lightColor;
+	vec3 diffuse = ke * diff * lightColor;
 
 	//Coeficiente de reflexão especular
 	vec3 R = normalize(reflect(-L,N));
@@ -119,7 +119,7 @@ struct Object
 
 struct Material {
     glm::vec3 ka;
-    glm::vec3 kd;
+    glm::vec3 ke;
     glm::vec3 ks;
     std::string textureFile;
 };
@@ -180,7 +180,7 @@ int main()
 	glUniform1i(glGetUniformLocation(shaderID, "texBuff"), 0);
 
     glUniform1f(glGetUniformLocation(shaderID, "ka"), mat.ka.r);
-	glUniform1f(glGetUniformLocation(shaderID, "kd"), mat.kd.r);
+	glUniform1f(glGetUniformLocation(shaderID, "ke"), mat.ke.r);
 	glUniform1f(glGetUniformLocation(shaderID, "ks"), mat.ks.r);
 	glUniform1f(glGetUniformLocation(shaderID, "q"), q);
 	glUniform3f(glGetUniformLocation(shaderID, "lightPos"), lightPos.x,lightPos.y,lightPos.z);
@@ -443,12 +443,12 @@ int loadSimpleOBJ(string filePATH, int &nVertices)
                     ssmtl >> materiais[nomeMaterial].ka.r >> materiais[nomeMaterial].ka.g >> materiais[nomeMaterial].ka.b;
                 }
 
-                if (mtlWord == "Kd") {
-                    ssmtl >> materiais[nomeMaterial].kd.r >> materiais[nomeMaterial].kd.g >> materiais[nomeMaterial].kd.b;
-                }
+				if (mtlWord == "Ks") {
+					ssmtl >> materiais[nomeMaterial].ks.r >> materiais[nomeMaterial].ks.g >> materiais[nomeMaterial].ks.b;
+				}
 
-                if (mtlWord == "Ks") {
-                    ssmtl >> materiais[nomeMaterial].ks.r >> materiais[nomeMaterial].ks.g >> materiais[nomeMaterial].ks.b;
+                if (mtlWord == "Ke") {
+                    ssmtl >> materiais[nomeMaterial].ke.r >> materiais[nomeMaterial].ke.g >> materiais[nomeMaterial].ke.b;
                 }
 
                 if (mtlWord == "map_Kd") {
